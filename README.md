@@ -29,16 +29,22 @@ The dashboard generates the following visualizations:
 ## How to Use
 
 ### Step 1: Prepare Your Data
-Ensure your data file contains the following columns (exact column names required):
-- `Status (Service Today)`
-- `Priority`
-- `Item type`
-- `Requestor Site  ` (note the trailing spaces)
-- `Deadline`
-- `Modified`
-- `To workgroup  ` (note the trailing spaces)
-- `Revised_Deadline`
-- `Description`
+The dashboard is flexible and will work with various column names. Here are the expected columns (with alternative names that will be automatically detected):
+
+**Required Columns (at least one of each category):**
+- **Status**: `Status (Service Today)`, `Status`, `Ticket Status`
+- **Priority**: `Priority`, `Priority Level`, `Urgency`
+- **Type**: `Item type`, `Type`, `Category`, `Ticket Type`
+- **Location**: `Requestor Site  `, `Requestor Site`, `Site`, `Location`
+- **Workgroup**: `To workgroup  `, `To workgroup`, `Workgroup`, `Team`, `Department`
+
+**Optional Columns (for enhanced analytics):**
+- **Dates**: `Deadline`, `Due Date`, `Target Date`
+- **Timestamps**: `Modified`, `Created`, `Date`, `Timestamp`
+- **Descriptions**: `Description`, `Summary`, `Details`, `Notes`
+- **Extensions**: `Revised_Deadline`, `Revised Deadline`, `New Deadline`
+
+**Note**: The dashboard will work with minimal data (just Status, Priority, Type) and will show warnings for missing optional columns while still providing useful analytics.
 
 ### Step 2: Upload Your File
 1. Open the dashboard by opening `index.html` in your web browser
@@ -98,9 +104,11 @@ Ensure your data file contains the following columns (exact column names require
 - Verify the file format is supported (.csv, .txt, .xlsx)
 
 **Data not processing correctly:**
-- Check column names match exactly (including spaces)
-- Ensure date columns are properly formatted
+- Check that you have at least basic columns (Status, Priority, Type)
+- The dashboard will automatically detect alternative column names
+- Ensure date columns are properly formatted if using date-based analytics
 - Verify CSV files use comma separators
+- Missing optional columns will show warnings but won't prevent processing
 
 **File upload fails:**
 - Check file size (very large files may cause issues)

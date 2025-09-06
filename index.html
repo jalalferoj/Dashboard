@@ -759,8 +759,8 @@
                     showAlert(`Data limited to ${settings.maxRows} rows for performance`, 'info');
                 }
 
-                // Validate required columns
-                const requiredColumns = [
+                // Check for available columns and provide warnings for missing ones
+                const expectedColumns = [
                     'Status (Service Today)',
                     'Priority',
                     'Item type',
@@ -768,15 +768,23 @@
                     'Deadline',
                     'Modified',
                     'To workgroup  ',
-                    'Description'
+                    'Description',
+                    'Revised_Deadline'
                 ];
 
-                const missingColumns = requiredColumns.filter(col => 
-                    !data[0].hasOwnProperty(col) && !data[0].hasOwnProperty(col.trim())
+                const availableColumns = Object.keys(data[0]);
+                const missingColumns = expectedColumns.filter(col => 
+                    !availableColumns.includes(col) && !availableColumns.includes(col.trim())
                 );
 
+                // Show warning for missing columns but continue processing
                 if (missingColumns.length > 0) {
-                    showAlert(`Missing required columns: ${missingColumns.join(', ')}`, 'danger');
+                    showAlert(`Warning: Some expected columns are missing (${missingColumns.join(', ')}). Dashboard will work with available data.`, 'warning');
+                }
+
+                // Ensure we have at least some basic data
+                if (availableColumns.length === 0) {
+                    showAlert('No data columns found in the file', 'danger');
                     showLoading(false);
                     showProgress(false);
                     return;
@@ -827,21 +835,26 @@
             let durationCount = 0;
             let breachedTickets = 0;
 
+            // Get available columns from the first row
+            const availableColumns = Object.keys(data[0] || {});
+            
             data.forEach(row => {
                 totalTickets++;
                 
-                const status = row['Status (Service Today)'] || 'Unknown';
-                const priority = row['Priority'] || 'Unknown';
-                const type = row['Item type'] || 'Unknown';
-                const site = row['Requestor Site  '] || 'Unknown';
-                const deadline = row['Deadline'];
-                const modified = row['Modified'];
-                const description = row['Description'] || '';
-                const location = row['To workgroup  '] || 'Unknown';
+                // Safely get values with fallbacks
+                const status = getColumnValue(row, ['Status (Service Today)', 'Status', 'Ticket Status']) || 'Unknown';
+                const priority = getColumnValue(row, ['Priority', 'Priority Level', 'Urgency']) || 'Unknown';
+                const type = getColumnValue(row, ['Item type', 'Type', 'Category', 'Ticket Type']) || 'Unknown';
+                const site = getColumnValue(row, ['Requestor Site  ', 'Requestor Site', 'Site', 'Location']) || 'Unknown';
+                const deadline = getColumnValue(row, ['Deadline', 'Due Date', 'Target Date']);
+                const modified = getColumnValue(row, ['Modified', 'Created', 'Date', 'Timestamp']);
+                const description = getColumnValue(row, ['Description', 'Summary', 'Details', 'Notes']) || '';
+                const location = getColumnValue(row, ['To workgroup  ', 'To workgroup', 'Workgroup', 'Team', 'Department']) || 'Unknown';
+                const revisedDeadline = getColumnValue(row, ['Revised_Deadline', 'Revised Deadline', 'New Deadline']);
 
                 // Count statuses
                 analytics.statusCounts[status] = (analytics.statusCounts[status] || 0) + 1;
-                if (status.toLowerCase().includes('closed') || status.toLowerCase().includes('resolved')) {
+                if (status.toLowerCase().includes('closed') || status.toLowerCase().includes('resolved') || status.toLowerCase().includes('completed')) {
                     closedTickets++;
                 }
 
@@ -854,7 +867,7 @@
                 // Count sites
                 analytics.siteCounts[site] = (analytics.siteCounts[site] || 0) + 1;
 
-                // Process dates and deadlines
+                // Process dates and deadlines (only if both columns exist)
                 if (deadline && modified) {
                     const d1 = new Date(modified);
                     const d2 = new Date(deadline);
@@ -888,9 +901,11 @@
                 // Count locations
                 analytics.locationClosedCounts[location] = (analytics.locationClosedCounts[location] || 0) + 1;
 
-                // Count extensions
-                const extended = row['Revised_Deadline'] ? 'Extended' : 'Not Extended';
-                analytics.extendedCounts[extended] = (analytics.extendedCounts[extended] || 0) + 1;
+                // Count extensions (only if revised deadline column exists)
+                if (revisedDeadline !== null) {
+                    const extended = revisedDeadline ? 'Extended' : 'Not Extended';
+                    analytics.extendedCounts[extended] = (analytics.extendedCounts[extended] || 0) + 1;
+                }
 
                 // Process descriptions
                 if (description) {
@@ -906,6 +921,21 @@
             renderAllCharts(analytics);
         }
 
+        // Helper function to get column value with multiple possible names
+        function getColumnValue(row, possibleNames) {
+            for (const name of possibleNames) {
+                if (row.hasOwnProperty(name)) {
+                    return row[name];
+                }
+                // Also check for trimmed versions
+                const trimmedName = name.trim();
+                if (row.hasOwnProperty(trimmedName)) {
+                    return row[trimmedName];
+                }
+            }
+            return null;
+        }
+
         function updateKPICards(total, closed, totalDuration, durationCount, breached) {
             document.getElementById('totalTickets').textContent = total.toLocaleString();
             document.getElementById('closedTickets').textContent = closed.toLocaleString();
@@ -915,21 +945,30 @@
 
         function renderAllCharts(analytics) {
             const chartConfigs = [
-                { id: 'statusChart', title: 'Ticket Status', data: analytics.statusCounts, type: 'pie' },
-                { id: 'priorityChart', title: 'Priority Distribution', data: analytics.priorityCounts, type: 'doughnut' },
-                { id: 'typeChart', title: 'Item Type Distribution', data: analytics.typeCounts, type: 'bar' },
-                { id: 'siteChart', title: 'Requestor Site Distribution', data: analytics.siteCounts, type: 'bar' },
-                { id: 'deadlineChart', title: 'Deadline Compliance', data: analytics.deadlineCounts, type: 'pie' },
-                { id: 'durationChart', title: 'Average Ticket Duration', data: analytics.durationCounts, type: 'bar' },
-                { id: 'weeklyClosedChart', title: 'Weekly Closed Tickets', data: analytics.weeklyCounts, type: 'line' },
-                { id: 'monthlyClosedChart', title: 'Monthly Closed Tickets', data: analytics.monthlyCounts, type: 'line' },
-                { id: 'locationClosedChart', title: 'Closed Tickets by Location', data: analytics.locationClosedCounts, type: 'bar' },
-                { id: 'extendedChart', title: 'Open Ticket Extended', data: analytics.extendedCounts, type: 'doughnut' },
-                { id: 'descriptionChart', title: 'Ticket Nature by Description', data: analytics.descriptionCounts, type: 'bar' }
+                { id: 'statusChart', title: 'Ticket Status', data: analytics.statusCounts, type: 'pie', required: true },
+                { id: 'priorityChart', title: 'Priority Distribution', data: analytics.priorityCounts, type: 'doughnut', required: true },
+                { id: 'typeChart', title: 'Item Type Distribution', data: analytics.typeCounts, type: 'bar', required: true },
+                { id: 'siteChart', title: 'Requestor Site Distribution', data: analytics.siteCounts, type: 'bar', required: true },
+                { id: 'deadlineChart', title: 'Deadline Compliance', data: analytics.deadlineCounts, type: 'pie', required: false },
+                { id: 'durationChart', title: 'Average Ticket Duration', data: analytics.durationCounts, type: 'bar', required: false },
+                { id: 'weeklyClosedChart', title: 'Weekly Closed Tickets', data: analytics.weeklyCounts, type: 'line', required: false },
+                { id: 'monthlyClosedChart', title: 'Monthly Closed Tickets', data: analytics.monthlyCounts, type: 'line', required: false },
+                { id: 'locationClosedChart', title: 'Closed Tickets by Location', data: analytics.locationClosedCounts, type: 'bar', required: true },
+                { id: 'extendedChart', title: 'Open Ticket Extended', data: analytics.extendedCounts, type: 'doughnut', required: false },
+                { id: 'descriptionChart', title: 'Ticket Nature by Description', data: analytics.descriptionCounts, type: 'bar', required: false }
             ];
 
             chartConfigs.forEach(config => {
-                renderChart(config.id, config.title, config.data, config.type);
+                // Only render charts that have data or are required
+                if (config.required || Object.keys(config.data).length > 0) {
+                    renderChart(config.id, config.title, config.data, config.type);
+                } else {
+                    // Hide charts with no data
+                    const chartContainer = document.getElementById(config.id).closest('.col');
+                    if (chartContainer) {
+                        chartContainer.style.display = 'none';
+                    }
+                }
             });
 
             // Render advanced analytics
@@ -944,16 +983,30 @@
                 charts[canvasId].destroy();
             }
 
+            // Handle empty data
+            const dataKeys = Object.keys(dataObj);
+            const dataValues = Object.values(dataObj);
+            
+            if (dataKeys.length === 0) {
+                // Show "No Data" message
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.fillStyle = '#fff';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('No Data Available', ctx.canvas.width / 2, ctx.canvas.height / 2);
+                return;
+            }
+
             const type = chartType || settings.chartType;
             const colors = getColorScheme();
             
             const config = {
                 type: type,
                 data: {
-                    labels: Object.keys(dataObj),
+                    labels: dataKeys,
                     datasets: [{
                         label: label,
-                        data: Object.values(dataObj),
+                        data: dataValues,
                         backgroundColor: colors.map(color => color + '80'),
                         borderColor: colors,
                         borderWidth: 2,
