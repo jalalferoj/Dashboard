@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Service Dashboard</title>
+    <title>Dynamic Data Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -25,10 +25,10 @@
             --border-color: #333;
         }
 
-        body { 
-            padding: 20px; 
+        body {
+            padding: 20px;
             background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a1a 100%);
-            color: #fff; 
+            color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
         }
@@ -52,42 +52,16 @@
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
         }
 
-        .chart-container { 
-            margin-top: 30px; 
+        .chart-container {
+            margin-top: 30px;
             position: relative;
         }
 
-        canvas { 
-            background: var(--card-bg); 
-            padding: 15px; 
+        canvas {
+            background: var(--card-bg);
+            padding: 15px;
             border-radius: 15px;
             border: 1px solid var(--border-color);
-        }
-
-        .kpi-card {
-            background: linear-gradient(135deg, var(--primary-color), #0056b3);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .kpi-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(13, 110, 253, 0.3);
-        }
-
-        .kpi-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .kpi-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
         }
 
         .loading-spinner {
@@ -133,14 +107,6 @@
             color: #fff;
         }
 
-        .chart-controls {
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-        }
-
         .data-preview {
             max-height: 300px;
             overflow-y: auto;
@@ -176,41 +142,6 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
-        .progress-bar {
-            border-radius: 10px;
-        }
-
-        .tooltip {
-            font-size: 0.875rem;
-        }
-
-        .chart-legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: center;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.875rem;
-        }
-
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .kpi-value { font-size: 2rem; }
-            .chart-container { margin-top: 20px; }
-        }
-
         .fade-in {
             animation: fadeIn 0.5s ease-in;
         }
@@ -219,35 +150,6 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .high-contrast {
-            --dark-bg: #000000;
-            --card-bg: #ffffff;
-            --border-color: #000000;
-            color: #000000;
-        }
-
-        .high-contrast .card {
-            background: #ffffff;
-            color: #000000;
-        }
-
-        .high-contrast .form-control,
-        .high-contrast .form-select {
-            background: #ffffff;
-            color: #000000;
-            border-color: #000000;
-        }
     </style>
 </head>
 <body>
@@ -255,7 +157,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-chart-line me-2"></i>Service Dashboard
+                <i class="fas fa-chart-line me-2"></i>Dynamic Data Dashboard
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -263,18 +165,8 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <button class="btn btn-outline-light btn-sm" id="themeToggle" title="Toggle High Contrast">
-                            <i class="fas fa-adjust"></i>
-                        </button>
-                    </li>
-                    <li class="nav-item ms-2">
                         <button class="btn btn-outline-light btn-sm" id="exportBtn" title="Export Dashboard" disabled>
                             <i class="fas fa-download"></i>
-                        </button>
-                    </li>
-                    <li class="nav-item ms-2">
-                        <button class="btn btn-outline-light btn-sm" id="settingsBtn" title="Settings">
-                            <i class="fas fa-cog"></i>
                         </button>
                     </li>
                 </ul>
@@ -287,9 +179,9 @@
         <div class="row mb-4">
             <div class="col-12">
                 <h1 class="text-center mb-4 fade-in">
-                    <i class="fas fa-chart-bar me-3"></i>Enhanced Service Dashboard
+                    <i class="fas fa-chart-bar me-3"></i>Dynamic Data Visualization
                 </h1>
-                <p class="text-center text-muted">Comprehensive analytics and insights for your service tickets</p>
+                <p class="text-center text-muted">Upload your data and create custom charts</p>
             </div>
         </div>
 
@@ -300,28 +192,17 @@
                     <i class="fas fa-upload me-2"></i>Data Upload
                 </h5>
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <label for="fileInput" class="form-label">Upload CSV, TXT, or Excel File</label>
                         <input class="form-control" type="file" id="fileInput" accept=".csv,.txt,.xlsx">
-                        <div class="form-text">Supported formats: CSV, TXT, Excel (.xlsx). Maximum file size: 50MB</div>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="dateRange" class="form-label">Date Range Filter</label>
-                        <select class="form-select" id="dateRange">
-                            <option value="all">All Time</option>
-                            <option value="30">Last 30 Days</option>
-                            <option value="90">Last 90 Days</option>
-                            <option value="365">Last Year</option>
-                        </select>
+                        <div class="form-text">Any structured data file is supported. The system will read the headers.</div>
                     </div>
                 </div>
-                
-                <!-- Progress Bar -->
+
                 <div class="progress mt-3" id="uploadProgress" style="display: none;">
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
                 </div>
 
-                <!-- Loading Spinner -->
                 <div class="loading-spinner" id="loadingSpinner">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Processing...</span>
@@ -329,7 +210,6 @@
                     <p class="mt-3">Processing your data...</p>
                 </div>
 
-                <!-- Data Preview -->
                 <div id="dataPreview" class="data-preview" style="display: none;">
                     <h6>Data Preview (First 10 rows)</h6>
                     <div class="table-responsive">
@@ -342,236 +222,44 @@
             </div>
         </div>
 
-        <!-- KPI Cards -->
-        <div class="row mb-4" id="kpiCards" style="display: none;">
-            <div class="col-md-3 mb-3">
-                <div class="card kpi-card">
-                    <div class="card-body">
-                        <div class="kpi-value" id="totalTickets">-</div>
-                        <div class="kpi-label">Total Tickets</div>
+        <!-- Dynamic Chart Generation -->
+        <div id="dynamicChartControls" class="card mb-4 fade-in" style="display: none;">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-magic me-2"></i> Create Your Own Chart</h5>
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label for="columnSelect" class="form-label">Select Data Column</label>
+                        <select id="columnSelect" class="form-select"></select>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card kpi-card" style="background: linear-gradient(135deg, var(--success-color), #0f5132);">
-                    <div class="card-body">
-                        <div class="kpi-value" id="closedTickets">-</div>
-                        <div class="kpi-label">Closed Tickets</div>
+                    <div class="col-md-3">
+                        <label for="chartTypeSelect" class="form-label">Select Chart Type</label>
+                        <select id="chartTypeSelect" class="form-select">
+                            <option value="bar">Bar Chart</option>
+                            <option value="pie">Pie Chart</option>
+                            <option value="doughnut">Doughnut Chart</option>
+                        </select>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card kpi-card" style="background: linear-gradient(135deg, var(--warning-color), #664d03);">
-                    <div class="card-body">
-                        <div class="kpi-value" id="avgDuration">-</div>
-                        <div class="kpi-label">Avg Duration (Days)</div>
+                    <div class="col-md-3">
+                        <label for="colorScheme" class="form-label">Color Scheme</label>
+                        <select class="form-select" id="colorScheme">
+                            <option value="default">Default</option>
+                            <option value="pastel">Pastel</option>
+                            <option value="vibrant">Vibrant</option>
+                            <option value="monochrome">Monochrome</option>
+                        </select>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card kpi-card" style="background: linear-gradient(135deg, var(--danger-color), #842029);">
-                    <div class="card-body">
-                        <div class="kpi-value" id="breachedTickets">-</div>
-                        <div class="kpi-label">Breached Deadlines</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Chart Controls -->
-        <div class="chart-controls" id="chartControls" style="display: none;">
-            <div class="row align-items-center">
-                <div class="col-md-4">
-                    <label for="chartType" class="form-label">Default Chart Type</label>
-                    <select class="form-select" id="chartType">
-                        <option value="bar">Bar Chart</option>
-                        <option value="pie">Pie Chart</option>
-                        <option value="doughnut">Doughnut Chart</option>
-                        <option value="line">Line Chart</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="colorScheme" class="form-label">Color Scheme</label>
-                    <select class="form-select" id="colorScheme">
-                        <option value="default">Default</option>
-                        <option value="pastel">Pastel</option>
-                        <option value="vibrant">Vibrant</option>
-                        <option value="monochrome">Monochrome</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Actions</label>
-                    <div class="btn-group w-100" role="group">
-                        <button type="button" class="btn btn-outline-primary" id="refreshCharts">
-                            <i class="fas fa-sync-alt"></i> Refresh
-                        </button>
-                        <button type="button" class="btn btn-outline-success" id="exportCharts">
-                            <i class="fas fa-download"></i> Export
+                    <div class="col-md-2">
+                        <button id="generateChartBtn" class="btn btn-primary w-100">
+                            <i class="fas fa-plus me-1"></i> Generate
                         </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Charts Section -->
-        <div id="charts" class="row row-cols-1 row-cols-md-2 g-4" style="display: none;">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="statusChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="priorityChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="typeChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="siteChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="deadlineChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="durationChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="weeklyClosedChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="monthlyClosedChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="locationClosedChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="extendedChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="descriptionChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Advanced Analytics Section -->
-        <div class="row mt-4" id="advancedAnalytics" style="display: none;">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-chart-line me-2"></i>Advanced Analytics
-                        </h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <canvas id="trendChart"></canvas>
-                            </div>
-                            <div class="col-md-6">
-                                <canvas id="correlationChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-cog me-2"></i>Dashboard Settings
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Display Settings</h6>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="showAnimations" checked>
-                                <label class="form-check-label" for="showAnimations">
-                                    Enable Animations
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="showTooltips" checked>
-                                <label class="form-check-label" for="showTooltips">
-                                    Show Chart Tooltips
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="autoRefresh">
-                                <label class="form-check-label" for="autoRefresh">
-                                    Auto-refresh Charts
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Data Settings</h6>
-                            <div class="mb-3">
-                                <label for="maxRows" class="form-label">Max Rows to Process</label>
-                                <input type="number" class="form-control" id="maxRows" value="10000" min="100" max="100000">
-                            </div>
-                            <div class="mb-3">
-                                <label for="dateFormat" class="form-label">Date Format</label>
-                                <select class="form-select" id="dateFormat">
-                                    <option value="auto">Auto-detect</option>
-                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveSettings">Save Settings</button>
-                </div>
-            </div>
+        <!-- Dynamic Chart Display Area -->
+        <div id="chartDisplayArea" class="row row-cols-1 row-cols-md-2 g-4">
+            <!-- Dynamically generated charts will be appended here -->
         </div>
     </div>
 
@@ -586,28 +274,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="exportFormat" class="form-label">Export Format</label>
-                        <select class="form-select" id="exportFormat">
-                            <option value="pdf">PDF Report</option>
-                            <option value="png">PNG Images</option>
-                            <option value="csv">CSV Data</option>
-                            <option value="json">JSON Data</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exportCharts" class="form-label">Include Charts</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="exportAllCharts" checked>
-                            <label class="form-check-label" for="exportAllCharts">
-                                All Charts
-                            </label>
-                        </div>
-                    </div>
+                    <p>Exporting the entire dashboard is not yet supported in this version.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="confirmExport">Export</button>
                 </div>
             </div>
         </div>
@@ -619,14 +289,9 @@
         let currentData = [];
         let charts = {};
         let settings = {
-            showAnimations: true,
-            showTooltips: true,
-            autoRefresh: false,
-            maxRows: 10000,
-            dateFormat: 'auto',
-            chartType: 'bar',
             colorScheme: 'default'
         };
+        let chartCounter = 0;
 
         // Color schemes
         const colorSchemes = {
@@ -639,49 +304,16 @@
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
             initializeEventListeners();
-            loadSettings();
-            initializeTooltips();
         });
 
         function initializeEventListeners() {
-            // File upload
             document.getElementById('fileInput').addEventListener('change', handleFileUpload);
-            
-            // Theme toggle
-            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-            
-            // Export functionality
             document.getElementById('exportBtn').addEventListener('click', () => {
                 new bootstrap.Modal(document.getElementById('exportModal')).show();
             });
-            
-            // Settings
-            document.getElementById('settingsBtn').addEventListener('click', () => {
-                new bootstrap.Modal(document.getElementById('settingsModal')).show();
-            });
-            
-            // Chart controls
-            document.getElementById('chartType').addEventListener('change', updateChartTypes);
-            document.getElementById('colorScheme').addEventListener('change', updateColorScheme);
-            document.getElementById('refreshCharts').addEventListener('click', refreshAllCharts);
-            document.getElementById('exportCharts').addEventListener('click', () => {
-                new bootstrap.Modal(document.getElementById('exportModal')).show();
-            });
-            
-            // Settings modal
-            document.getElementById('saveSettings').addEventListener('click', saveSettings);
-            
-            // Export modal
-            document.getElementById('confirmExport').addEventListener('click', exportDashboard);
-            
-            // Date range filter
-            document.getElementById('dateRange').addEventListener('change', applyDateFilter);
-        }
-
-        function initializeTooltips() {
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
+            document.getElementById('generateChartBtn').addEventListener('click', generateChartFromSelection);
+            document.getElementById('colorScheme').addEventListener('change', () => {
+                settings.colorScheme = document.getElementById('colorScheme').value;
             });
         }
 
@@ -689,25 +321,19 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            // Validate file size
-            if (file.size > 50 * 1024 * 1024) {
-                showAlert('File size exceeds 50MB limit', 'danger');
-                return;
-            }
-
-            // Validate file type
-            const validTypes = ['.csv', '.txt', '.xlsx'];
-            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
-            if (!validTypes.includes(fileExtension)) {
-                showAlert('Invalid file type. Please upload CSV, TXT, or Excel files.', 'danger');
-                return;
-            }
-
             showLoading(true);
             showProgress(true);
 
+            // Reset UI
+            document.getElementById('dynamicChartControls').style.display = 'none';
+            document.getElementById('chartDisplayArea').innerHTML = '';
+            document.getElementById('dataPreview').style.display = 'none';
+            charts = {};
+            chartCounter = 0;
+
+
             const reader = new FileReader();
-            
+
             if (file.name.endsWith('.xlsx')) {
                 reader.onload = function(e) {
                     try {
@@ -720,7 +346,6 @@
                     } catch (error) {
                         showAlert('Error reading Excel file: ' + error.message, 'danger');
                         showLoading(false);
-                        showProgress(false);
                     }
                 };
                 reader.readAsArrayBuffer(file);
@@ -737,258 +362,87 @@
                     error: function(error) {
                         showAlert('Error reading file: ' + error.message, 'danger');
                         showLoading(false);
-                        showProgress(false);
                     }
                 });
             }
         }
 
         function processData(data) {
-            try {
-                // Validate data
-                if (!data || data.length === 0) {
-                    showAlert('No data found in the file', 'warning');
-                    showLoading(false);
-                    showProgress(false);
-                    return;
-                }
-
-                // Limit data size
-                if (data.length > settings.maxRows) {
-                    data = data.slice(0, settings.maxRows);
-                    showAlert(`Data limited to ${settings.maxRows} rows for performance`, 'info');
-                }
-
-                // Check for available columns and provide warnings for missing ones
-                const expectedColumns = [
-                    'Status (Service Today)',
-                    'Priority',
-                    'Item type',
-                    'Requestor Site  ',
-                    'Deadline',
-                    'Modified',
-                    'To workgroup  ',
-                    'Description',
-                    'Revised_Deadline'
-                ];
-
-                const availableColumns = Object.keys(data[0]);
-                const missingColumns = expectedColumns.filter(col => 
-                    !availableColumns.includes(col) && !availableColumns.includes(col.trim())
-                );
-
-                // Show warning for missing columns but continue processing
-                if (missingColumns.length > 0) {
-                    showAlert(`Warning: Some expected columns are missing (${missingColumns.join(', ')}). Dashboard will work with available data.`, 'warning');
-                }
-
-                // Ensure we have at least some basic data
-                if (availableColumns.length === 0) {
-                    showAlert('No data columns found in the file', 'danger');
-                    showLoading(false);
-                    showProgress(false);
-                    return;
-                }
-
-                currentData = data;
-                
-                // Show data preview
-                showDataPreview(data);
-                
-                // Process and display analytics
-                processAnalytics(data);
-                
-                // Show dashboard sections
-                showDashboardSections();
-                
+            if (!data || data.length === 0) {
+                showAlert('No data found in the file', 'warning');
                 showLoading(false);
-                showProgress(false);
-                showAlert('Data processed successfully!', 'success');
-                
-            } catch (error) {
-                showAlert('Error processing data: ' + error.message, 'danger');
-                showLoading(false);
-                showProgress(false);
+                return;
             }
+
+            currentData = data;
+
+            showDataPreview(data);
+            populateColumnSelector(data);
+
+            document.getElementById('dynamicChartControls').style.display = 'block';
+            document.getElementById('exportBtn').disabled = false;
+
+            showLoading(false);
+            showProgress(false);
+            showAlert('Data processed successfully! Now create your charts.', 'success');
         }
 
-        function processAnalytics(data) {
-            const analytics = {
-                statusCounts: {},
-                priorityCounts: {},
-                typeCounts: {},
-                siteCounts: {},
-                deadlineCounts: {},
-                durationCounts: {},
-                weeklyCounts: {},
-                monthlyCounts: {},
-                locationClosedCounts: {},
-                extendedCounts: {},
-                descriptionCounts: {},
-                trendData: {},
-                correlationData: {}
-            };
+        function populateColumnSelector(data) {
+            const select = document.getElementById('columnSelect');
+            select.innerHTML = '';
+            const headers = Object.keys(data[0]);
+            headers.forEach(header => {
+                const option = document.createElement('option');
+                option.value = header;
+                option.textContent = header;
+                select.appendChild(option);
+            });
+        }
 
-            let totalTickets = 0;
-            let closedTickets = 0;
-            let totalDuration = 0;
-            let durationCount = 0;
-            let breachedTickets = 0;
+        function generateChartFromSelection() {
+            const selectedColumn = document.getElementById('columnSelect').value;
+            const chartType = document.getElementById('chartTypeSelect').value;
 
-            // Get available columns from the first row
-            const availableColumns = Object.keys(data[0] || {});
-            
+            if (!selectedColumn) {
+                showAlert('Please select a column to visualize.', 'warning');
+                return;
+            }
+
+            const chartData = generateChartData(currentData, selectedColumn);
+
+            renderDynamicChart(selectedColumn, chartType, chartData);
+        }
+
+        function generateChartData(data, column) {
+            const counts = {};
             data.forEach(row => {
-                totalTickets++;
-                
-                // Safely get values with fallbacks
-                const status = getColumnValue(row, ['Status (Service Today)', 'Status', 'Ticket Status']) || 'Unknown';
-                const priority = getColumnValue(row, ['Priority', 'Priority Level', 'Urgency']) || 'Unknown';
-                const type = getColumnValue(row, ['Item type', 'Type', 'Category', 'Ticket Type']) || 'Unknown';
-                const site = getColumnValue(row, ['Requestor Site  ', 'Requestor Site', 'Site', 'Location']) || 'Unknown';
-                const deadline = getColumnValue(row, ['Deadline', 'Due Date', 'Target Date']);
-                const modified = getColumnValue(row, ['Modified', 'Created', 'Date', 'Timestamp']);
-                const description = getColumnValue(row, ['Description', 'Summary', 'Details', 'Notes']) || '';
-                const location = getColumnValue(row, ['To workgroup  ', 'To workgroup', 'Workgroup', 'Team', 'Department']) || 'Unknown';
-                const revisedDeadline = getColumnValue(row, ['Revised_Deadline', 'Revised Deadline', 'New Deadline']);
-
-                // Count statuses
-                analytics.statusCounts[status] = (analytics.statusCounts[status] || 0) + 1;
-                if (status.toLowerCase().includes('closed') || status.toLowerCase().includes('resolved') || status.toLowerCase().includes('completed')) {
-                    closedTickets++;
-                }
-
-                // Count priorities
-                analytics.priorityCounts[priority] = (analytics.priorityCounts[priority] || 0) + 1;
-
-                // Count types
-                analytics.typeCounts[type] = (analytics.typeCounts[type] || 0) + 1;
-
-                // Count sites
-                analytics.siteCounts[site] = (analytics.siteCounts[site] || 0) + 1;
-
-                // Process dates and deadlines (only if both columns exist)
-                if (deadline && modified) {
-                    const d1 = new Date(modified);
-                    const d2 = new Date(deadline);
-                    
-                    if (!isNaN(d1.getTime()) && !isNaN(d2.getTime())) {
-                        const duration = (d2 - d1) / (1000 * 60 * 60 * 24);
-                        const durationKey = duration > 0 ? Math.round(duration) + ' days' : 'Past Due';
-                        analytics.durationCounts[durationKey] = (analytics.durationCounts[durationKey] || 0) + 1;
-
-                        if (duration > 0) {
-                            totalDuration += duration;
-                            durationCount++;
-                        }
-
-                        const deadlineKey = d2 < new Date() ? 'Breached' : 'Compliant';
-                        analytics.deadlineCounts[deadlineKey] = (analytics.deadlineCounts[deadlineKey] || 0) + 1;
-                        
-                        if (deadlineKey === 'Breached') {
-                            breachedTickets++;
-                        }
-
-                        // Weekly and monthly trends
-                        const week = 'Week ' + d2.getWeek();
-                        analytics.weeklyCounts[week] = (analytics.weeklyCounts[week] || 0) + 1;
-
-                        const month = d2.toLocaleString('default', { month: 'short', year: 'numeric' });
-                        analytics.monthlyCounts[month] = (analytics.monthlyCounts[month] || 0) + 1;
-                    }
-                }
-
-                // Count locations
-                analytics.locationClosedCounts[location] = (analytics.locationClosedCounts[location] || 0) + 1;
-
-                // Count extensions (only if revised deadline column exists)
-                if (revisedDeadline !== null) {
-                    const extended = revisedDeadline ? 'Extended' : 'Not Extended';
-                    analytics.extendedCounts[extended] = (analytics.extendedCounts[extended] || 0) + 1;
-                }
-
-                // Process descriptions
-                if (description) {
-                    const key = description.split(' ')[0];
-                    analytics.descriptionCounts[key] = (analytics.descriptionCounts[key] || 0) + 1;
-                }
+                const value = row[column] || 'N/A';
+                counts[value] = (counts[value] || 0) + 1;
             });
-
-            // Update KPI cards
-            updateKPICards(totalTickets, closedTickets, totalDuration, durationCount, breachedTickets);
-
-            // Render all charts
-            renderAllCharts(analytics);
+            return counts;
         }
 
-        // Helper function to get column value with multiple possible names
-        function getColumnValue(row, possibleNames) {
-            for (const name of possibleNames) {
-                if (row.hasOwnProperty(name)) {
-                    return row[name];
-                }
-                // Also check for trimmed versions
-                const trimmedName = name.trim();
-                if (row.hasOwnProperty(trimmedName)) {
-                    return row[trimmedName];
-                }
-            }
-            return null;
-        }
+        function renderDynamicChart(columnName, chartType, dataObj) {
+            chartCounter++;
+            const canvasId = `dynamicChart-${chartCounter}`;
 
-        function updateKPICards(total, closed, totalDuration, durationCount, breached) {
-            document.getElementById('totalTickets').textContent = total.toLocaleString();
-            document.getElementById('closedTickets').textContent = closed.toLocaleString();
-            document.getElementById('avgDuration').textContent = durationCount > 0 ? Math.round(totalDuration / durationCount) : 0;
-            document.getElementById('breachedTickets').textContent = breached.toLocaleString();
-        }
+            const chartWrapper = document.createElement('div');
+            chartWrapper.className = 'col';
+            chartWrapper.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="${canvasId}"></canvas>
+                    </div>
+                </div>
+            `;
+            document.getElementById('chartDisplayArea').appendChild(chartWrapper);
 
-        function renderAllCharts(analytics) {
-            const chartConfigs = [
-                { id: 'statusChart', title: 'Ticket Status', data: analytics.statusCounts, type: 'pie', required: true },
-                { id: 'priorityChart', title: 'Priority Distribution', data: analytics.priorityCounts, type: 'doughnut', required: true },
-                { id: 'typeChart', title: 'Item Type Distribution', data: analytics.typeCounts, type: 'bar', required: true },
-                { id: 'siteChart', title: 'Requestor Site Distribution', data: analytics.siteCounts, type: 'bar', required: true },
-                { id: 'deadlineChart', title: 'Deadline Compliance', data: analytics.deadlineCounts, type: 'pie', required: false },
-                { id: 'durationChart', title: 'Average Ticket Duration', data: analytics.durationCounts, type: 'bar', required: false },
-                { id: 'weeklyClosedChart', title: 'Weekly Closed Tickets', data: analytics.weeklyCounts, type: 'line', required: false },
-                { id: 'monthlyClosedChart', title: 'Monthly Closed Tickets', data: analytics.monthlyCounts, type: 'line', required: false },
-                { id: 'locationClosedChart', title: 'Closed Tickets by Location', data: analytics.locationClosedCounts, type: 'bar', required: true },
-                { id: 'extendedChart', title: 'Open Ticket Extended', data: analytics.extendedCounts, type: 'doughnut', required: false },
-                { id: 'descriptionChart', title: 'Ticket Nature by Description', data: analytics.descriptionCounts, type: 'bar', required: false }
-            ];
-
-            chartConfigs.forEach(config => {
-                // Only render charts that have data or are required
-                if (config.required || Object.keys(config.data).length > 0) {
-                    renderChart(config.id, config.title, config.data, config.type);
-                } else {
-                    // Hide charts with no data
-                    const chartContainer = document.getElementById(config.id).closest('.col');
-                    if (chartContainer) {
-                        chartContainer.style.display = 'none';
-                    }
-                }
-            });
-
-            // Render advanced analytics
-            renderAdvancedAnalytics(analytics);
-        }
-
-        function renderChart(canvasId, label, dataObj, chartType = null) {
             const ctx = document.getElementById(canvasId).getContext('2d');
-            
-            // Destroy existing chart if it exists
-            if (charts[canvasId]) {
-                charts[canvasId].destroy();
-            }
 
-            // Handle empty data
             const dataKeys = Object.keys(dataObj);
             const dataValues = Object.values(dataObj);
-            
+
             if (dataKeys.length === 0) {
-                // Show "No Data" message
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.fillStyle = '#fff';
                 ctx.font = '16px Arial';
@@ -997,56 +451,38 @@
                 return;
             }
 
-            const type = chartType || settings.chartType;
             const colors = getColorScheme();
-            
+
             const config = {
-                type: type,
+                type: chartType,
                 data: {
                     labels: dataKeys,
                     datasets: [{
-                        label: label,
+                        label: `Count of ${columnName}`,
                         data: dataValues,
                         backgroundColor: colors.map(color => color + '80'),
                         borderColor: colors,
                         borderWidth: 2,
-                        hoverBackgroundColor: colors.map(color => color + 'CC'),
-                        hoverBorderColor: colors
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    animation: settings.showAnimations ? {} : false,
                     plugins: {
-                        legend: { 
-                            display: type === 'pie' || type === 'doughnut',
+                        legend: {
+                            display: chartType === 'pie' || chartType === 'doughnut',
                             position: 'bottom'
                         },
-                        title: { 
-                            display: true, 
-                            text: label,
+                        title: {
+                            display: true,
+                            text: `Distribution by ${columnName}`,
                             color: '#fff',
                             font: { size: 16, weight: 'bold' }
-                        },
-                        tooltip: {
-                            enabled: settings.showTooltips,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: '#333',
-                            borderWidth: 1
                         }
                     },
-                    scales: type !== 'pie' && type !== 'doughnut' ? {
-                        x: {
-                            ticks: { color: '#fff' },
-                            grid: { color: '#333' }
-                        },
-                        y: {
-                            ticks: { color: '#fff' },
-                            grid: { color: '#333' }
-                        }
+                    scales: chartType !== 'pie' && chartType !== 'doughnut' ? {
+                        x: { ticks: { color: '#fff' }, grid: { color: '#333' } },
+                        y: { ticks: { color: '#fff' }, grid: { color: '#333' } }
                     } : {}
                 }
             };
@@ -1054,141 +490,29 @@
             charts[canvasId] = new Chart(ctx, config);
         }
 
-        function renderAdvancedAnalytics(analytics) {
-            // Trend analysis
-            renderTrendChart(analytics);
-            
-            // Correlation analysis
-            renderCorrelationChart(analytics);
-        }
-
-        function renderTrendChart(analytics) {
-            const ctx = document.getElementById('trendChart').getContext('2d');
-            const monthlyData = analytics.monthlyCounts;
-            
-            const sortedMonths = Object.keys(monthlyData).sort((a, b) => {
-                return new Date(a) - new Date(b);
-            });
-
-            if (charts['trendChart']) {
-                charts['trendChart'].destroy();
-            }
-
-            charts['trendChart'] = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: sortedMonths,
-                    datasets: [{
-                        label: 'Tickets by Month',
-                        data: sortedMonths.map(month => monthlyData[month]),
-                        borderColor: '#0d6efd',
-                        backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { 
-                            display: true, 
-                            text: 'Monthly Trend Analysis',
-                            color: '#fff'
-                        }
-                    },
-                    scales: {
-                        x: { ticks: { color: '#fff' }, grid: { color: '#333' } },
-                        y: { ticks: { color: '#fff' }, grid: { color: '#333' } }
-                    }
-                }
-            });
-        }
-
-        function renderCorrelationChart(analytics) {
-            const ctx = document.getElementById('correlationChart').getContext('2d');
-            
-            if (charts['correlationChart']) {
-                charts['correlationChart'].destroy();
-            }
-
-            // Simple correlation between priority and status
-            const priorityStatusData = {};
-            currentData.forEach(row => {
-                const priority = row['Priority'] || 'Unknown';
-                const status = row['Status (Service Today)'] || 'Unknown';
-                const key = `${priority} - ${status}`;
-                priorityStatusData[key] = (priorityStatusData[key] || 0) + 1;
-            });
-
-            charts['correlationChart'] = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(priorityStatusData),
-                    datasets: [{
-                        label: 'Priority vs Status',
-                        data: Object.values(priorityStatusData),
-                        backgroundColor: getColorScheme().map(color => color + '80'),
-                        borderColor: getColorScheme(),
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { 
-                            display: true, 
-                            text: 'Priority vs Status Correlation',
-                            color: '#fff'
-                        }
-                    },
-                    scales: {
-                        x: { ticks: { color: '#fff', maxRotation: 45 }, grid: { color: '#333' } },
-                        y: { ticks: { color: '#fff' }, grid: { color: '#333' } }
-                    }
-                }
-            });
-        }
-
         function getColorScheme() {
             return colorSchemes[settings.colorScheme] || colorSchemes.default;
         }
 
         function showLoading(show) {
-            const spinner = document.getElementById('loadingSpinner');
-            spinner.style.display = show ? 'block' : 'none';
+            document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
         }
 
         function showProgress(show) {
             const progress = document.getElementById('uploadProgress');
             progress.style.display = show ? 'block' : 'none';
-            
             if (show) {
-                // Simulate progress
-                let width = 0;
-                const interval = setInterval(() => {
-                    width += Math.random() * 15;
-                    if (width >= 100) {
-                        width = 100;
-                        clearInterval(interval);
-                    }
-                    progress.querySelector('.progress-bar').style.width = width + '%';
-                }, 200);
+                progress.querySelector('.progress-bar').style.width = '0%';
+                setTimeout(() => progress.querySelector('.progress-bar').style.width = '100%', 200);
             }
         }
 
         function showDataPreview(data) {
             const preview = document.getElementById('dataPreview');
             const table = document.getElementById('previewTable');
-            
-            if (data.length === 0) return;
-            
-            // Clear existing content
             table.querySelector('thead').innerHTML = '';
             table.querySelector('tbody').innerHTML = '';
-            
-            // Add headers
+
             const headers = Object.keys(data[0]);
             const headerRow = document.createElement('tr');
             headers.forEach(header => {
@@ -1197,8 +521,7 @@
                 headerRow.appendChild(th);
             });
             table.querySelector('thead').appendChild(headerRow);
-            
-            // Add data rows (first 10)
+
             const previewData = data.slice(0, 10);
             previewData.forEach(row => {
                 const tr = document.createElement('tr');
@@ -1209,223 +532,30 @@
                 });
                 table.querySelector('tbody').appendChild(tr);
             });
-            
+
             preview.style.display = 'block';
         }
 
-        function showDashboardSections() {
-            document.getElementById('kpiCards').style.display = 'block';
-            document.getElementById('chartControls').style.display = 'block';
-            document.getElementById('charts').style.display = 'block';
-            document.getElementById('advancedAnalytics').style.display = 'block';
-            document.getElementById('exportBtn').disabled = false;
-            
-            // Add fade-in animation
-            setTimeout(() => {
-                document.getElementById('kpiCards').classList.add('fade-in');
-                document.getElementById('charts').classList.add('fade-in');
-                document.getElementById('advancedAnalytics').classList.add('fade-in');
-            }, 100);
-        }
-
         function showAlert(message, type = 'info') {
+            const alertContainer = document.querySelector('.container');
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.style.position = 'fixed';
+            alertDiv.style.top = '80px';
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '1050';
             alertDiv.innerHTML = `
                 ${message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
-            
-            // Insert at the top of the container
-            const container = document.querySelector('.container');
-            container.insertBefore(alertDiv, container.firstChild);
-            
-            // Auto-dismiss after 5 seconds
+
+            alertContainer.appendChild(alertDiv);
+
             setTimeout(() => {
                 if (alertDiv.parentNode) {
                     alertDiv.remove();
                 }
             }, 5000);
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('high-contrast');
-            const isHighContrast = document.body.classList.contains('high-contrast');
-            localStorage.setItem('highContrast', isHighContrast);
-        }
-
-        function updateChartTypes() {
-            settings.chartType = document.getElementById('chartType').value;
-            if (currentData.length > 0) {
-                refreshAllCharts();
-            }
-        }
-
-        function updateColorScheme() {
-            settings.colorScheme = document.getElementById('colorScheme').value;
-            if (currentData.length > 0) {
-                refreshAllCharts();
-            }
-        }
-
-        function refreshAllCharts() {
-            if (currentData.length > 0) {
-                processAnalytics(currentData);
-            }
-        }
-
-        function applyDateFilter() {
-            const filter = document.getElementById('dateRange').value;
-            if (filter === 'all' || currentData.length === 0) {
-                processAnalytics(currentData);
-                return;
-            }
-
-            const days = parseInt(filter);
-            const cutoffDate = new Date();
-            cutoffDate.setDate(cutoffDate.getDate() - days);
-
-            const filteredData = currentData.filter(row => {
-                const modifiedDate = new Date(row['Modified']);
-                return !isNaN(modifiedDate.getTime()) && modifiedDate >= cutoffDate;
-            });
-
-            processAnalytics(filteredData);
-        }
-
-        function saveSettings() {
-            settings.showAnimations = document.getElementById('showAnimations').checked;
-            settings.showTooltips = document.getElementById('showTooltips').checked;
-            settings.autoRefresh = document.getElementById('autoRefresh').checked;
-            settings.maxRows = parseInt(document.getElementById('maxRows').value);
-            settings.dateFormat = document.getElementById('dateFormat').value;
-            
-            localStorage.setItem('dashboardSettings', JSON.stringify(settings));
-            bootstrap.Modal.getInstance(document.getElementById('settingsModal')).hide();
-            showAlert('Settings saved successfully!', 'success');
-        }
-
-        function loadSettings() {
-            const saved = localStorage.getItem('dashboardSettings');
-            if (saved) {
-                settings = { ...settings, ...JSON.parse(saved) };
-            }
-            
-            const highContrast = localStorage.getItem('highContrast') === 'true';
-            if (highContrast) {
-                document.body.classList.add('high-contrast');
-            }
-            
-            // Update UI elements
-            document.getElementById('showAnimations').checked = settings.showAnimations;
-            document.getElementById('showTooltips').checked = settings.showTooltips;
-            document.getElementById('autoRefresh').checked = settings.autoRefresh;
-            document.getElementById('maxRows').value = settings.maxRows;
-            document.getElementById('dateFormat').value = settings.dateFormat;
-            document.getElementById('chartType').value = settings.chartType;
-            document.getElementById('colorScheme').value = settings.colorScheme;
-        }
-
-        function exportDashboard() {
-            const format = document.getElementById('exportFormat').value;
-            const includeCharts = document.getElementById('exportAllCharts').checked;
-            
-            switch (format) {
-                case 'pdf':
-                    exportToPDF(includeCharts);
-                    break;
-                case 'png':
-                    exportToPNG(includeCharts);
-                    break;
-                case 'csv':
-                    exportToCSV();
-                    break;
-                case 'json':
-                    exportToJSON();
-                    break;
-            }
-            
-            bootstrap.Modal.getInstance(document.getElementById('exportModal')).hide();
-        }
-
-        function exportToPDF(includeCharts) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            doc.setFontSize(20);
-            doc.text('Service Dashboard Report', 20, 20);
-            
-            if (includeCharts) {
-                // Export charts as images and add to PDF
-                Object.keys(charts).forEach((chartId, index) => {
-                    if (charts[chartId]) {
-                        const canvas = document.getElementById(chartId);
-                        const imgData = canvas.toDataURL('image/png');
-                        doc.addImage(imgData, 'PNG', 20, 40 + (index * 100), 160, 80);
-                    }
-                });
-            }
-            
-            doc.save('dashboard-report.pdf');
-            showAlert('PDF exported successfully!', 'success');
-        }
-
-        function exportToPNG(includeCharts) {
-            if (includeCharts) {
-                Object.keys(charts).forEach(chartId => {
-                    if (charts[chartId]) {
-                        const canvas = document.getElementById(chartId);
-                        const link = document.createElement('a');
-                        link.download = `${chartId}.png`;
-                        link.href = canvas.toDataURL();
-                        link.click();
-                    }
-                });
-            }
-            showAlert('Charts exported as PNG images!', 'success');
-        }
-
-        function exportToCSV() {
-            if (currentData.length === 0) return;
-            
-            const csv = Papa.unparse(currentData);
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'dashboard-data.csv';
-            link.click();
-            window.URL.revokeObjectURL(url);
-            showAlert('Data exported as CSV!', 'success');
-        }
-
-        function exportToJSON() {
-            if (currentData.length === 0) return;
-            
-            const json = JSON.stringify(currentData, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'dashboard-data.json';
-            link.click();
-            window.URL.revokeObjectURL(url);
-            showAlert('Data exported as JSON!', 'success');
-        }
-
-        // Utility function for week calculation
-        Date.prototype.getWeek = function() {
-            const onejan = new Date(this.getFullYear(), 0, 1);
-            return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
-        };
-
-        // Auto-refresh functionality
-        if (settings.autoRefresh) {
-            setInterval(() => {
-                if (currentData.length > 0) {
-                    refreshAllCharts();
-                }
-            }, 30000); // Refresh every 30 seconds
         }
     </script>
 </body>
